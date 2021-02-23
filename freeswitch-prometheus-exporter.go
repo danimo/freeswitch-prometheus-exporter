@@ -1,16 +1,17 @@
 package main
 
 import (
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promauto"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/tomponline/fsclient/fsclient"
 	"log"
 	"log/syslog"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/tomponline/fsclient/fsclient"
 )
 
 var fs *fsclient.Client
