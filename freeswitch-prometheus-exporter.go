@@ -4,6 +4,7 @@ import (
 	"log"
 	"log/syslog"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -23,6 +24,12 @@ var (
 	})
 )
 
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
+}
 func main() {
 	log.SetFlags(0)
 	syslogWriter, err := syslog.New(syslog.LOG_INFO, "freeswitch-prometheus-exporter")
@@ -38,11 +45,14 @@ func main() {
 		"HEARTBEAT",
 	}
 
-	fs = fsclient.NewClient("127.0.0.1:8021", "ClueCon", filters, subs, initFunc)
+	fs_host := getEnv("FS_HOST", "127.0.0.1:8021")
+	fs_password := getEnv("FS_PASSWORD", "ClueCon")
+	fs = fsclient.NewClient(fs_host, fs_password, filters, subs, initFunc)
 
 	go statsPoller()
 	http.Handle("/metrics", promhttp.Handler())
-	http.ListenAndServe(":2112", nil)
+	listen := getEnv("LISTEN", ":2112")
+	http.ListenAndServe(listen, nil)
 }
 
 func initFunc(fsclient *fsclient.Client) {
