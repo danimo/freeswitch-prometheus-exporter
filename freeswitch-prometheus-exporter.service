@@ -1,0 +1,9 @@
+[Unit]
+Description=Freeswitch exporter for Prometheus
+After=freeswitch.target
+
+[Service]
+EnvironmentFile-=/etc/default/freeswitch-prometheus-exporter
+Type=simple
+DynamicUser=yes
+ExecStart=/usr/local/bin/freeswitch-prometheus-exporter
